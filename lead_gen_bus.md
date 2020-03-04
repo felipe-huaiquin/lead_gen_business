@@ -28,7 +28,7 @@ JOIN sites ON sites.client_id = clients.client_id
 WHERE clients.client_id = 1
 GROUP BY MONTH(sites.created_datetime), YEAR(sites.created_datetime)
 ```
-    * Cliente 20.
+   * Cliente 20.
 ```
 SELECT clients.client_id, COUNT(sites.domain_name) AS site_quantity, MONTHNAME(sites.created_datetime) AS month, YEAR(sites.created_datetime) AS year
 FROM clients
