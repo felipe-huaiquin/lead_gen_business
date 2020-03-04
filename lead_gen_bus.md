@@ -20,7 +20,7 @@ JOIN sites ON sites.client_id = clients.client_id
 WHERE clients.client_id = 10;
 ```
 4. Consulta que devuelve el número total de sitios creados por mes y por año para el cliente 1 y luego, para el cliente 20.
-    * Cliente 1.
+Cliente 1:
 ```
 SELECT clients.client_id, COUNT(sites.domain_name) AS site_quantity, MONTH(sites.created_datetime) AS month, YEAR(sites.created_datetime) AS year
 FROM clients
@@ -28,7 +28,7 @@ JOIN sites ON sites.client_id = clients.client_id
 WHERE clients.client_id = 1
 GROUP BY MONTH(sites.created_datetime), YEAR(sites.created_datetime)
 ```
-   * Cliente 20.
+Cliente 20:
 ```
 SELECT clients.client_id, COUNT(sites.domain_name) AS site_quantity, MONTHNAME(sites.created_datetime) AS month, YEAR(sites.created_datetime) AS year
 FROM clients
