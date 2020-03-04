@@ -64,31 +64,34 @@ GROUP BY clients.client_id, MONTH(leads.registered_datetime);
 ```
 8. Consulta que devuelve una lista con los nombres de todos los clientes y su correspondiente cantidad de leads durante el año 2011. Esta lista contiene el nombre del cliente, el dominio del sitio web, el número de lead de ese sitio web, y la fecha de ese lead.
 ```
-SELECT CONCAT(clients.first_name," ",clients.last_name) AS client_name, sites.domain_name, MONTHNAME(leads.registered_datetime)
+SELECT CONCAT(clients.first_name," ",clients.last_name) AS client_name, sites.domain_name, COUNT(leads.leads_id) AS total_leads , DATE_FORMAT(leads.registered_datetime, "%W %M %e %Y") AS date_lead
 FROM clients
 JOIN sites ON sites.client_id = clients.client_id
 JOIN leads ON leads.site_id = sites.site_id
 WHERE YEAR(leads.registered_datetime) = 2011
-GROUP BY sites.domain_name;
+GROUP BY sites.domain_name
+ORDER BY clients.client_id ASC;
 ```
 Además, se pide una segunda consulta que retorne todos los clientes, sus páginas web y el número total de leads para cada sitio en todo momento.
 ```
-SELECT CONCAT(clients.first_name," ",clients.last_name) AS client_name, sites.domain_name, FORMAT(leads.registered_date,"dddd, MMMM, yyyy") as leads_date
+SELECT CONCAT(clients.first_name," ",clients.last_name) AS client_name, sites.domain_name, COUNT(leads.leads_id) AS total_leads
 FROM clients
 JOIN sites ON sites.client_id = clients.client_id
 JOIN leads ON leads.site_id = sites.site_id
-GROUP BY sites.domain_name;
+GROUP BY sites.domain_name
+ORDER BY clients.client_id ASC;
 ```
 9. Consulta que retorna el ingreso total por id de cliente para cada mes de cada año.
 ```
-SELECT clients.client_id, SUM(billing.amount) AS total_charged, MONTHNAME(billing.charged_datetime) AS month, YEAR(billing.charged_datetime) AS year
+SELECT clients.client_id, CONCAT(clients.first_name," ",clients.last_name) AS client_name, SUM(billing.amount) AS total_revenue, MONTHNAME(billing.charged_datetime) AS month, YEAR(billing.charged_datetime) AS year
 FROM clients
 JOIN billing ON billing.client_id = clients.client_id
-GROUP BY MONTH(billing.charged_datetime), YEAR(billing.charged_datetime);
+GROUP BY clients.client_id, MONTH(billing.charged_datetime), YEAR(billing.charged_datetime)
+ORDER BY clients.client_id, YEAR(billing.charged_datetime), MONTH(billing.charged_datetime) ASC;
 ```
 10. Consulta que recupera todos los sitios que posee un cliente.
 ```
-SELECT CONCAT(clients.first_name," ",clients.last_name) AS client_name, GROUP_CONCAT(sites.domain_name)
+SELECT CONCAT(clients.first_name," ",clients.last_name) AS client_name, GROUP_CONCAT(sites.domain_name SEPARATOR ' / ') AS clients_domains
 FROM clients
 JOIN sites ON sites.client_id = clients.client_id
 GROUP BY clients.client_id;
